@@ -128,8 +128,6 @@ Detailed authentication process:
 4. Subsequent request handling
 5. Token refresh mechanism
 
-[Previous content continues with Installation section...]
-
 ## 🔐 Security Implementation
 
 The application implements several security measures:
