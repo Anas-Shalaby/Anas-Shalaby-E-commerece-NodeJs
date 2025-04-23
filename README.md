@@ -158,6 +158,6 @@ The application uses Redis for two primary purposes:
 1. Clone the repository:
 
 ```bash
-git clone <your-repo-url>
+git clone (https://github.com/Anas-Shalaby/E-commerece-NodeJs)
 cd E-commerece-NodeJs
 ```
