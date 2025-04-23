@@ -60,5 +60,5 @@ A robust and scalable E-commerce REST API built with Node.js, Express, MongoDB, 
 
 ```bash
 git clone <your-repo-url>
-cd e-commerce-store
+cd E-commerece-NodeJs
 ```
