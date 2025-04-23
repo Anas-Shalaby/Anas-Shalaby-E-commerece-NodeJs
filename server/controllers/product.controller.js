@@ -66,7 +66,15 @@ export const getFeaturedProducts = async (req, res) => {
  */
 export const addProduct = async (req, res) => {
   try {
-    const { name, description, price, category, image } = req.body;
+    // set the content type to form data
+    let { name, description, price, category, image } = req.body;
+    if (req.file) {
+      // convert the image to base64
+      const b64 = Buffer.from(req.file.buffer).toString("base64");
+      // create the data uri
+      let dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+      image = dataURI;
+    }
     // upload image to cloudinary
     let cloudinaryResponse = null;
     if (image) {

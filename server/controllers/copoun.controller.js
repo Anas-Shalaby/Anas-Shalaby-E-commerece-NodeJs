@@ -1,5 +1,20 @@
 import Copoun from "../models/copoun.model.js";
 
+export const addCopoun = async (req, res) => {
+  try {
+    const { code, discountAmount, expirationDate } = req.body;
+    const copoun = await Copoun.create({
+      code,
+      discountAmount,
+      expirationDate,
+      userId: req.user._id,
+    });
+    res.status(201).json({ status: true, data: copoun });
+  } catch (error) {
+    res.status(500).json({ status: false, message: error.message });
+  }
+};
+
 /**
  * Handle GET /coupons request
  * Return the active coupon for the logged in user
@@ -10,7 +25,7 @@ import Copoun from "../models/copoun.model.js";
 export const getCopoun = async (req, res) => {
   try {
     const user = req.user;
-    const copoun = await Copoun.findOne({ userId: user._id, isActive: true });
+    const copoun = await Copoun.find({ userId: user._id, isActive: true });
     if (!copoun) {
       return res
         .status(404)

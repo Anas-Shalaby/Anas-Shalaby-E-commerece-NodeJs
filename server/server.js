@@ -42,9 +42,10 @@ app.get("/", (req, res) => {
 const PORT = process.env.PORT || 4000;
 
 // allow json and parse the body of the request
-app.use(express.json());
-// allow url encoded
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
+// allow url encoded
 app.use(cookieParser());
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/products", productRoutes);

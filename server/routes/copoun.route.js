@@ -1,6 +1,10 @@
 import express from "express";
-import { protectRoute } from "../middleware/auth.middleware.js";
-import { getCopoun, validateCopoun } from "../controllers/copoun.controller.js";
+import { adminRoute, protectRoute } from "../middleware/auth.middleware.js";
+import {
+  getCopoun,
+  validateCopoun,
+  addCopoun,
+} from "../controllers/copoun.controller.js";
 const router = express.Router();
 
 /**
@@ -41,6 +45,7 @@ const router = express.Router();
  *              description: Internal server error
  */
 router.get("/", protectRoute, getCopoun);
+router.post("/", protectRoute, adminRoute, addCopoun);
 router.get("/validate", protectRoute, validateCopoun);
 
 export default router;

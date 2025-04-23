@@ -38,6 +38,7 @@ export const createCheckoutSession = async (req, res) => {
           },
           unit_amount: amount,
         },
+        quantity: product.quantity, // This was missing
       };
     });
     let copoun = null;
@@ -85,9 +86,16 @@ export const createCheckoutSession = async (req, res) => {
     res.status(200).json({
       status: true,
       sessionId: session.id,
+      url: session.url, // Add this to your response
       totalAmount: totalAmount / 100,
     });
-  } catch (error) {}
+  } catch (error) {
+    console.error("Stripe session creation error:", error);
+    res.status(500).json({
+      status: false,
+      message: error.message || "Error creating checkout session",
+    });
+  }
 };
 
 /**
@@ -127,6 +135,7 @@ export const checkoutSuccess = async (req, res) => {
   try {
     const { sessionId } = req.body;
     const session = await stripe.checkout.sessions.retrieve(sessionId);
+
     if (session.payment_status === "paid") {
       if (session.metadata.copounCode) {
         await Copoun.findByIdAndUpdate(
@@ -152,14 +161,24 @@ export const checkoutSuccess = async (req, res) => {
         totalAmount: session.amount_total / 100,
         stripeSessionId: sessionId,
       });
+      await newOrder.save();
+      return res.status(200).json({
+        status: true,
+        data: newOrder,
+        message: "Order created successfully",
+      });
+    } else {
+      // Handle non-paid status
+      return res.status(400).json({
+        status: false,
+        message: `Payment status is ${session.payment_status}`,
+      });
     }
-    await newOrder.save();
-    res.status(200).json({
-      status: true,
-      data: newOrder,
-      message: "Order created successfully",
-    });
   } catch (error) {
-    res.status(500).json({ status: false, message: error.message });
+    console.error("Checkout success error:", error);
+    return res.status(500).json({
+      status: false,
+      message: error.message || "Error processing checkout",
+    });
   }
 };
